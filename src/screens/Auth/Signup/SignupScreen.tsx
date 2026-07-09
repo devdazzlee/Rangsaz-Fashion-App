@@ -93,7 +93,7 @@ const SignupScreen = ({ navigation }: Props) => {
     // TODO: call authService.signup(fullName, email, password)
     setTimeout(() => {
       setLoading(false);
-      navigation.replace('Home');
+      navigation.replace('MainTabs');;
     }, 1000);
   };
 

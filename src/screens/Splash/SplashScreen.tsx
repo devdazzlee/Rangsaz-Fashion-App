@@ -33,7 +33,7 @@ const SplashScreen = ({ navigation }: Props) => {
 
     const timer = setTimeout(() => {
       const isLoggedIn = false; // TODO: real auth check
-      navigation.replace(isLoggedIn ? 'Home' : 'Login');
+      navigation.replace(isLoggedIn ? 'MainTabs' : 'Login');
     }, 2400);
 
     return () => clearTimeout(timer);

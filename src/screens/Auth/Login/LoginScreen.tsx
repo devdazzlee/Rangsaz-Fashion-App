@@ -17,6 +17,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   withDelay,
+  withSequence, // ✅ added
 } from 'react-native-reanimated';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../../navigation/types';
@@ -33,7 +34,6 @@ const LoginScreen = ({ navigation }: Props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Animation values
   const topOpacity = useSharedValue(0);
   const topY = useSharedValue(-20);
   const formOpacity = useSharedValue(0);
@@ -69,15 +69,17 @@ const LoginScreen = ({ navigation }: Props) => {
       return;
     }
 
-    buttonScale.value = withTiming(0.97, { duration: 100 }, () => {
-      buttonScale.value = withTiming(1, { duration: 150 });
-    });
+    // ✅ Fixed: withSequence instead of nested callback
+    buttonScale.value = withSequence(
+      withTiming(0.97, { duration: 100 }),
+      withTiming(1, { duration: 150 }),
+    );
 
     setLoading(true);
     // TODO: call authService.login(email, password)
     setTimeout(() => {
       setLoading(false);
-      navigation.replace('Home');
+      navigation.replace('MainTabs');
     }, 1000);
   };
 
