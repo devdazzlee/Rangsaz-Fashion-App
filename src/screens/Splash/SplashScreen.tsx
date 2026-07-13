@@ -11,6 +11,7 @@ import Animated, {
 import LinearGradient from 'react-native-linear-gradient';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../navigation/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Splash'>;
 
@@ -23,17 +24,41 @@ const SplashScreen = ({ navigation }: Props) => {
   const dot3 = useSharedValue(0.3);
 
   useEffect(() => {
-    logoOpacity.value = withTiming(1, { duration: 800, easing: Easing.out(Easing.ease) });
-    logoScale.value = withTiming(1, { duration: 800, easing: Easing.out(Easing.ease) });
+    logoOpacity.value = withTiming(1, {
+      duration: 800,
+      easing: Easing.out(Easing.ease),
+    });
+    logoScale.value = withTiming(1, {
+      duration: 800,
+      easing: Easing.out(Easing.ease),
+    });
     taglineOpacity.value = withDelay(500, withTiming(1, { duration: 600 }));
 
-    dot1.value = withDelay(0, withRepeat(withTiming(1, { duration: 600 }), -1, true));
-    dot2.value = withDelay(200, withRepeat(withTiming(1, { duration: 600 }), -1, true));
-    dot3.value = withDelay(400, withRepeat(withTiming(1, { duration: 600 }), -1, true));
+    dot1.value = withDelay(
+      0,
+      withRepeat(withTiming(1, { duration: 600 }), -1, true),
+    );
+    dot2.value = withDelay(
+      200,
+      withRepeat(withTiming(1, { duration: 600 }), -1, true),
+    );
+    dot3.value = withDelay(
+      400,
+      withRepeat(withTiming(1, { duration: 600 }), -1, true),
+    );
 
-    const timer = setTimeout(() => {
+    // AFTER:
+    const timer = setTimeout(async () => {
+      const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
       const isLoggedIn = false; // TODO: real auth check
-      navigation.replace(isLoggedIn ? 'MainTabs' : 'Login');
+
+      if (!hasSeenOnboarding) {
+        navigation.replace('Onboarding');
+      } else if (isLoggedIn) {
+        navigation.replace('MainTabs');
+      } else {
+        navigation.replace('Login');
+      }
     }, 2400);
 
     return () => clearTimeout(timer);

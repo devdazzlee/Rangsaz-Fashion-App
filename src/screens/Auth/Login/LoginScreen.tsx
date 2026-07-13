@@ -148,7 +148,10 @@ const LoginScreen = ({ navigation }: Props) => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.forgotWrapper}>
+          <TouchableOpacity
+            style={styles.forgotWrapper}
+            onPress={() => navigation.navigate('ForgotPassword')}
+          >
             <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
 
